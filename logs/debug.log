@@ -1,0 +1,239 @@
+
+
+$request->getControllerName()
+ ===== login
+
+
+
+$request->getActionName()
+ ===== authenticate
+
+
+
+login/authenticate:- Post Params
+ ===== Array
+(
+    [controller] => login
+    [action] => authenticate
+    [module] => default
+    [userName] => xyz.a
+    [password] => guest
+)
+
+
+
+
+login/authenticate:- Auth Identity
+ ===== stdClass Object
+(
+    [id] => 2
+    [first_name] => Xyz
+    [last_name] => Abc
+    [email] => xyz.a@gmail.com
+    [login] => xyz.a
+    [password] => guest
+    [user_type_id] => 2
+    [status] => 0
+    [created] => 2014-06-21 23:30:04
+    [modified] => 2014-06-22 03:01:48
+)
+
+
+
+
+login/authenticate:- DB ACL For User xyz.a
+ ===== Array
+(
+    [user_type] => guest
+    [user_name] => Xyz
+    [user_id] => 2
+)
+
+
+
+login/authenticate:- User Is authenticated and Auth Set 
+
+
+$request->getControllerName()
+ ===== dashboard
+
+
+
+$request->getActionName()
+ ===== index
+
+
+
+Acl.php :- allowed_access in ACL
+ ===== Array
+(
+    [0] => Array
+        (
+            [controller] => role
+            [access] => view
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [1] => Array
+        (
+            [controller] => role
+            [access] => edit
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [2] => Array
+        (
+            [controller] => dashboard
+            [access] => view
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [3] => Array
+        (
+            [controller] => dashboard
+            [access] => edit
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [4] => Array
+        (
+            [controller] => dashboard
+            [access] => delete
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [5] => Array
+        (
+            [controller] => dashboard
+            [access] => import
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [6] => Array
+        (
+            [controller] => dashboard
+            [access] => export
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [7] => Array
+        (
+            [controller] => user
+            [access] => view
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [8] => Array
+        (
+            [controller] => user
+            [access] => edit
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [9] => Array
+        (
+            [controller] => user
+            [access] => delete
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [10] => Array
+        (
+            [controller] => user
+            [access] => import
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [11] => Array
+        (
+            [controller] => user
+            [access] => export
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [12] => Array
+        (
+            [controller] => login
+            [access] => view
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [13] => Array
+        (
+            [controller] => login
+            [access] => edit
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [14] => Array
+        (
+            [controller] => login
+            [access] => delete
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [15] => Array
+        (
+            [controller] => login
+            [access] => import
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [16] => Array
+        (
+            [controller] => login
+            [access] => export
+            [user_type] => admin
+            [user_type_id] => 1
+        )
+
+    [17] => Array
+        (
+            [controller] => user
+            [access] => view
+            [user_type] => guest
+            [user_type_id] => 2
+        )
+
+)
+
+
+
+Access denied for dashboard/index
+
+
+
+$request->getControllerName()
+ ===== error
+
+
+
+$request->getActionName()
+ ===== error
+
+
+
+$request->getControllerName()
+ ===== error
+
+
+
+$request->getActionName()
+ ===== no-access
+
