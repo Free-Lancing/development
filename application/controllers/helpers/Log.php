@@ -8,7 +8,7 @@ class Zend_Controller_Action_Helper_Log extends Zend_Controller_Action_Helper_Ab
         $this->_appIni = new Zend_Config_Ini(APPLICATION_PATH . '/configs/settings.ini', APPLICATION_ENV);
     }
 
-    public function direct($message, $data, $exit = true, $fileWrite = true) {
+    public function direct($message, $data, $exit = false, $fileWrite = true) {
         if ($this->_appIni !== null && $this->_appIni->debug->mode) {
             if ($fileWrite) {
                 $message = PHP_EOL . $message . PHP_EOL;

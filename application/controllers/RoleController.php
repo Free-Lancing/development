@@ -20,7 +20,7 @@ class RoleController extends Zend_Controller_Action {
         
         // Make Controllers entry Dynamic
         $this->view->controllers = array('dashboard', 'user', 'login');
-        $this->view->actions = array('view', 'edit', 'delete', 'import', 'export');
+        $this->view->actions = array_keys($aclCache->load('access_privileges'));
         $this->view->userTypes = array_keys($roles);
         
         foreach($allowed_access as $accessData) {
@@ -43,7 +43,8 @@ class RoleController extends Zend_Controller_Action {
         unset($this->_params['controller']);
         unset($this->_params['action']);
         
-        (new Application_Model_Acl)->update(array('status' => 1), 'status = 0 AND controller <> "role"');
+        $aclObj = new Application_Model_Acl();
+        $aclObj->update(array('status' => 1), 'status = 0 AND controller <> "role"');
         
         // empty the table and re assign roles
         if (!empty($this->_params)) {
@@ -57,7 +58,7 @@ class RoleController extends Zend_Controller_Action {
                 $insertValue['controller'] = $insertDetails[1];
                 $insertValue['access'] = $insertDetails[2];
                 $insertValue['created'] = date('Y-m-d G:i:s');
-                (new Application_Model_Acl)->insert($insertValue);
+                $aclObj->insert($insertValue);
             }
         
             $auth = Zend_Auth::getInstance();
