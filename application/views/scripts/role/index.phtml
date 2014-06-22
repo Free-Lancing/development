@@ -1,0 +1,47 @@
+<?php
+$controllers = $this->controllers;
+$actions = $this->actions;
+$userTypes = $this->userTypes;
+?>
+
+<form action="http://localhost/development/public/index.php/role/update" method="post" name="" id="">
+<?php
+foreach ($userTypes as $type) {
+    ?>
+    <table>
+        <thead>
+        <td><?php echo ucfirst($type); ?></td>
+        <?php
+        foreach ($actions as $access) {
+            ?>
+            <td><?php echo ucfirst($access) ?></td>
+                <?php
+            }
+        ?>
+    </thead>
+        <tbody>
+        <?php
+        foreach ($controllers as $controllerName) {
+            $checked = '';
+            $initials = $type . '_' . $controllerName;
+            echo '<tr>';
+            echo '<td> ' . $controllerName . '</td>';
+            
+            foreach ($actions as $access) {
+                $name = $initials . '_' . $access;
+                $checked = (in_array($name, $this->existingRoles)) ? 'checked="checked"' : '';
+                echo '<td><input type="checkbox" name="' . $name . '" id="' . $name . '" ' . $checked . ' /></td>';
+            }
+            
+            echo '</tr>';
+        }
+        ?>
+        </tbody>
+    </table>
+    <br />
+    <?php
+}
+?>
+    
+    <input type="submit" value="Update Roles" />
+</form>
