@@ -24,4 +24,13 @@ class Application_Model_Users extends Zend_Db_Table {
         }
         
     }
+    
+    function getInfo(){
+        try {
+            $schemaInfo = $this->info();
+            return $schemaInfo;
+        } catch (Zend_Db_Statement_Exception $exc) {
+            throw new Plugin_Exceptions_MySql('Schema for '. $this->_name . ' not present.');
+        }
+    }
 }
