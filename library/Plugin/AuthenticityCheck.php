@@ -50,6 +50,11 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
             $this->_redirector->setCode(303)->setExit(true)->setGotoSimple($loginAction, $loginController);
         } else {
             $acl = $this->getACL($authUser);
+            
+            // Redirect if resource is not created
+            if (!in_array($request->getControllerName(), $acl->getResources())) {
+                throw new Zend_Controller_Dispatcher_Exception();
+            }
 
             if (!($acl->isAllowed($authUser->userType, $request->getControllerName(), $request->getActionName()))) {
                 $this->_logHelper->direct('Access denied for ' . $request->getControllerName() . '/' . $request->getActionName() . PHP_EOL, array(), false);
