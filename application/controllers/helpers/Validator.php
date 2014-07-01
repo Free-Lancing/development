@@ -10,6 +10,7 @@ class Zend_Controller_Action_Helper_Validator extends Zend_Controller_Action_Hel
 
     public function direct($metadata, $data) {
         $error = array();
+        
         foreach ( $metadata as $key => $value){
             
             if($key == 'first_name' || $key == 'last_name' || $key == 'email' || $key == 'login' || $key == 'password' ){
@@ -23,6 +24,15 @@ class Zend_Controller_Action_Helper_Validator extends Zend_Controller_Action_Hel
                 }else if(strlen($check) > $value['LENGTH']){
                     $error['length'][] = $key ;
                 }
+            }else if($key == 'gender' && preg_match('/^enum\((.*)\)$/', $value['DATA_TYPE'], $matches)){
+                  foreach( explode(',', $matches[1]) as $val )
+                 {
+                     $enum[] = trim( $val, "'" );
+                 }
+                 if(!in_array($data[$key], $enum)){
+                     $error['not_enum'] = $key;
+                 }
+                
             }
         }
         

@@ -63,6 +63,15 @@ class schema_build0 {
 
         return $this->_model->runSQL($sql);
     }
+    protected function modifyUserTable() {
+        if ($this->_executionType === 'execute') {
+            $sql = "ALTER TABLE `users` ADD `gender` ENUM('1', '2') NOT NULL AFTER `user_type_id`;";
+        } else {
+            $sql = "DROP TABLE IF EXISTS `acl`";
+        }
+
+        return $this->_model->runSQL($sql);
+    }
 
     protected function insertDefaultAcl() {
         if ($this->_executionType === 'execute') {

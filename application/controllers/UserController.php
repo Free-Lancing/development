@@ -55,6 +55,7 @@ class UserController extends Zend_Controller_Action {
                 'login'     => $post['uname'],
                 'password'  => $post['password'],
                 'user_type_id'  => $userType,
+                'gender'  => $post['gender'],
                 'status'  => 0,
                 'created'  => $this->_now,
                 'modified'  => $this->_now,
