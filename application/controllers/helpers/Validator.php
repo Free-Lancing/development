@@ -13,29 +13,29 @@ class Zend_Controller_Action_Helper_Validator extends Zend_Controller_Action_Hel
         
         foreach ( $metadata as $key => $value){
             
-            if($key == 'first_name' || $key == 'last_name' || $key == 'email' || $key == 'login' || $key == 'password' ){
+            if($value['DATA_TYPE'] == 'varchar'){
                 $check = $data[$key];
                 if( empty($value['NULLABLE']) && empty($check) ){
-                    $error['null'][] = $key ;
+                    $error[$key] = 'Null Value' ;
                 }else if( !filter_var($check, FILTER_SANITIZE_STRING)){
-                    $error['string'][] = $key ;
+                    $error[$key] = 'Not String' ;
                 }else if($key == 'email' && !filter_var($check, FILTER_VALIDATE_EMAIL)){
-                    $error['email'][] = $check ;
+                    $error[$key] = 'Email Invalid' ;
                 }else if(strlen($check) > $value['LENGTH']){
-                    $error['length'][] = $key ;
+                    $error[$key] = 'Exceeds max length ' . $value['LENGTH'];
                 }
-            }else if($key == 'gender' && preg_match('/^enum\((.*)\)$/', $value['DATA_TYPE'], $matches)){
+            }else if( preg_match('/^enum\((.*)\)$/', $value['DATA_TYPE'], $matches)){
                   foreach( explode(',', $matches[1]) as $val )
                  {
                      $enum[] = trim( $val, "'" );
                  }
                  if(!in_array($data[$key], $enum)){
-                     $error['not_enum'] = $key;
+                     $error[$key] = 'gender not selected';
                  }
                 
             }
         }
-        
+       
         if(!empty($error)){
             return $error;
         }else{
