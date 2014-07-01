@@ -12,7 +12,7 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
         $appIni = Zend_Registry::get('APPENV')->env;
         
         // NOTE: If controller name is given without an action name, then it will have complete access to its scope else limited to that action
-        $exclusions = array('error' => '', 'schema-builder' => 'set-up-project', 'login' => '', 'user' => 'logout',);
+        $exclusions = array('error' => '', 'schema-builder' => 'set-up-project', 'login' => '', 'user' => 'logout', 'user' => 'register');
 
         $this->_logHelper->direct('$request->getControllerName()', $request->getControllerName());
         $this->_logHelper->direct('$request->getActionName()', $request->getActionName());
