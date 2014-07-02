@@ -1,0 +1,51 @@
+<html>
+    <body>
+        <div id="mainContent">
+            <form name="register" id="register" method="post" action="http://localhost/development/public/index.php/user/submit">
+                <div>
+
+                    <label>First name</label>
+                    <input type="text" name="fname" id="fname"  placeholder="First Name" />
+                </div>
+                <div>
+                    <label>Last name</label>
+                    <input type="text" name="lname" id="lname" placeholder="Last Name" />
+
+                </div>
+                <div>
+                    <label>Email</label>
+                    <input type="text" name="email" id="email"  placeholder="Email"/>
+
+                </div>
+                <div>
+                    <label>UserName</label>
+                    <input type="text" name="uname" id="uname" required="true" placeholder="Login User Name" />
+
+                </div>
+                <div>
+
+                    <label>Password</label>
+                    <input type="password" name="password" id="password" required="true" placeholder="Password" />
+                </div>
+                <div>
+
+                    <label>Gender</label>
+                    <select id="gender" name="gender">
+                        
+                        <option value="0">Select
+                        </option>
+                        <option value="1">
+                            Male
+                        </option>
+                        <option value="2">
+                            Female
+                        </option>
+                    </select>
+                </div>
+                <input type="submit" name="btnsubmit" id="btnsubmit"/>
+
+            </form>
+
+        </div>
+    </body>
+</html>
