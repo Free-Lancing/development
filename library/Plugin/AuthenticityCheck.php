@@ -11,8 +11,8 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
     public function preDispatch(Zend_Controller_Request_Abstract $request) {
         $appIni = Zend_Registry::get('APPENV')->env;
         
-        // NOTE: If controller name is given without an action name, then it will have complete access to its scope else limited to that action
-        $exclusions = array('error' => '', 'schema-builder' => 'set-up-project', 'login' => '', 'user' => 'logout',);
+        // NOTE: If controller name is given without an action name, then it will have complete access to its scope else limited to the actions in array
+        $exclusions = array('error' => '', 'schema-builder' => array('set-up-project'), 'login' => '', 'user' => array('logout', 'register', 'submit'));
 
         $this->_logHelper->direct('$request->getControllerName()', $request->getControllerName());
         $this->_logHelper->direct('$request->getActionName()', $request->getActionName());
@@ -22,7 +22,7 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
                 return;
             }
             
-            if ($exclusions[$request->getControllerName()] !== '' && $exclusions[$request->getControllerName()] === $request->getActionName()) {
+            if ($exclusions[$request->getControllerName()] !== '' && in_array($request->getActionName(), $exclusions[$request->getControllerName()])) {
                 return;
             }
         }
@@ -76,6 +76,7 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
 
             if (!($accessPrivileges = $cache->load('access_privileges'))) {
                 $accessPrivileges = array('view' => array('index', 'get', 'view'), 'edit' => array('update', 'edit', 'submit'), 'delete' => array('delete'), 'import' => array('import', 'import-submit'), 'export' => array('export'));
+                
                 $cache->save($accessPrivileges, 'access_privileges');
             }
 
