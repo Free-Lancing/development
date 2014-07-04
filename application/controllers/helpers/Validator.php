@@ -10,40 +10,52 @@ class Zend_Controller_Action_Helper_Validator extends Zend_Controller_Action_Hel
 
     public function direct($metadata, $data) {
         $error = array();
-        
-        foreach ( $metadata as $key => $value){
-            
-            if($value['DATA_TYPE'] == 'varchar'){
-                $check = $data[$key];
-                if( empty($value['NULLABLE']) && empty($check) ){
-                    $error[$key] = 'Null Value' ;
-                }else if( !filter_var($check, FILTER_SANITIZE_STRING)){
-                    $error[$key] = 'Not String' ;
-                }else if($key == 'email' && !filter_var($check, FILTER_VALIDATE_EMAIL)){
-                    $error[$key] = 'Email Invalid' ;
-                }else if(strlen($check) > $value['LENGTH']){
-                    $error[$key] = 'Exceeds max length ' . $value['LENGTH'];
-                }
-            }else if( preg_match('/^enum\((.*)\)$/', $value['DATA_TYPE'], $matches)){
-                  foreach( explode(',', $matches[1]) as $val )
-                 {
-                     $enum[] = trim( $val, "'" );
-                 }
-                 if(!in_array($data[$key], $enum)){
-                     $error[$key] = 'gender not selected';
-                 }
-                
+
+        foreach ($metadata as $columnName => $metaColumn) {
+            // create different functions for varchar, enum, int/float, date, datetime
+            if ($metaColumn['DATA_TYPE'] === 'varchar') {
+
+                $error = $this->checkVarchar($metaColumn['NULLABLE'], $data[$columnName], $columnName);
+            } else if (strchr($metaColumn['DATA_TYPE'], 'enum')) {
+                $dataType = trim(str_replace(array('enum', '\'', '(', ')'), array('', '', '', ''), $metaColumn['DATA_TYPE']));
+                $enumValues = explode(',', $dataType);
+                $error = $this->checkEnum($enumValues, $data[$columnName], $columnName);
             }
         }
-       
-        if(!empty($error)){
-            return $error;
+        echo '<pre>';
+        print_r($error);
+        echo '</pre>';
+        exit;
+        return $error;
+    }
+
+    public function checkVarchar($metaColumnValue, $valueToBeChecked, $columnName) {
+
+        $returnError = array();
+        if (empty($metaColumnValue) && empty($valueToBeChecked)) {
+            $returnError[$columnName]['null'] = '';
+        } else if (!filter_var($valueToBeChecked, FILTER_SANITIZE_STRING)) {
+            $returnError[$columnName]['alphabets'] = 'Not String';
+        } else if ($columnName === 'email' && !filter_var($valueToBeChecked, FILTER_VALIDATE_EMAIL)) {
+            $returnError[$columnName]['email'] = '';
+        } else if (strlen($valueToBeChecked) > $metaColumnValue) {
+            $returnError[$columnName]['max_length'] = '';
+        }  else {
+           $returnError ='';
+        }
+
+        return $returnError;
+    }
+
+    function checkEnum($enumArray, $checkValue, $colName) {
+        $returValue = array();
+        if (!in_array($checkValue, $enumArray)) {
+            $returValue[$colName]['enum'] = '';
         }else{
-            return "success";
+            $returValue= '';
         }
         
+        return $returValue;
     }
-    
-    
 
 }

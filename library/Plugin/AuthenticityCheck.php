@@ -25,7 +25,7 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
             if ($exclusions[$request->getControllerName()] !== '' && in_array($request->getActionName(), $exclusions[$request->getControllerName()])) {
                 return;
             }
-        }
+        }return;
         
         $auth = Zend_Auth::getInstance();
         $authUser = $auth->getStorage()->read();
