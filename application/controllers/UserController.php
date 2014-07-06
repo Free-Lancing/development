@@ -3,19 +3,18 @@
 class UserController extends Zend_Controller_Action {
 
     public function init() {
-        // User Init
         $request = $this->getRequest();
         $this->_params = $request->getParams();
-        $this->_now = date('Y-m-d H:i:s');
     }
 
     public function indexAction() {
+        
     }
-    
+
     public function getListAction() {
         
     }
-    
+
     public function viewAction() {
         
     }
@@ -35,49 +34,60 @@ class UserController extends Zend_Controller_Action {
     public function cloneAction() {
         
     }
-    
-    public function registerAction(){
+
+    public function registerAction() {
         Zend_Layout::getMvcInstance()->setLayout('login');
-        
-    }
-    
-    public function submitAction(){
-        Zend_Layout::getMvcInstance()->disableLayout();
-        $objUser = new Application_Model_Users();
-        $post = $this->_params;
-        $getInfo = $objUser->getInfo();
-        $userType = 2;
-        if(!empty($post)){
-            $checkValidation = array(
-                'first_name' => $post['fname'],
-                'last_name' => $post['lname'],
-                'email'     => $post['email'],
-                'login'     => $post['uname'],
-                'password'  => $post['password'],
-                'user_type_id'  => $userType,
-                'gender'  => $post['gender'],
-                'status'  => 0,
-                'created'  => $this->_now,
-                'modified'  => $this->_now,
-            );
-            
-            $returnString = $this->_helper->validator($getInfo['metadata'], $checkValidation);
-            
-            if($returnString == 'success'){
-                
-                if($objUser->insert($checkValidation)){
-                    echo "Success";
-                }else{
-                    echo "Failure";
-                }
-                exit;
-            }else{
-                echo '<pre>';
-                print_r($returnString);
-                echo '</pre>';
-                exit;
+
+        if ($this->_request->isPost()) {
+            if (empty($this->_params)) {
+                $this->_request->setPost(array('status' => 'error', 'msg' => 'No form submit data found'));
+                $this->_forward('register', 'user', null);
             }
-            
+
+            if (empty($this->_params['status'])) {
+                $objUser = new Application_Model_Users();
+                $metaData = $objUser->info()['metadata'];
+                
+                $dataArray['first_name'] = $this->_params['fname'];
+                $dataArray['last_name'] = $this->_params['lname'];
+                $dataArray['email'] = $this->_params['email'];
+                $dataArray['login'] = $this->_params['uname'];
+                $dataArray['password'] = $this->_params['password'];
+                $dataArray['gender'] = $this->_params['gender'];
+
+                $error = $this->_helper->validate($metaData, $dataArray);
+
+                if (!empty($error)) {
+                    $this->_request->setPost(array('status' => 'error', 'msg' => serialize($error)));
+                    $this->_forward('register', 'user', null);
+                }
+                
+                $dataArray = $this->_helper->format($metaData, $dataArray);
+                $dataArray['created'] = date('Y-m-d G:i:s');
+                $objUser->insert($dataArray);
+                
+                $this->_request->setPost(array('status' => 'success', 'msg' => 'User Created Successfully. Check email for the verification Url'));
+                $this->redirect('login/index/success/1');
+            }
         }
     }
+
+    public function logoutAction() {
+        $auth = Zend_Auth::getInstance();
+        $user = $auth->getIdentity();
+        $currentUserType = $user->userType;
+
+        // Remove Cache
+        $bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+        $manager = $bootstrap->getResource('cachemanager');
+        $cache = $manager->getCache('acl');
+        $cache->remove('ACL_' . $currentUserType);
+
+        // Remove Auth Storage
+        $auth->clearIdentity();
+
+        $this->_helper->log('user/index :- Auth Storage Cleared and Session all Unset and Cache Remove Success ', array(), false);
+        $this->_redirect('login/');
+    }
+
 }

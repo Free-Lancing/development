@@ -25,7 +25,7 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
             if ($exclusions[$request->getControllerName()] !== '' && in_array($request->getActionName(), $exclusions[$request->getControllerName()])) {
                 return;
             }
-        }return;
+        }
         
         $auth = Zend_Auth::getInstance();
         $authUser = $auth->getStorage()->read();
@@ -68,15 +68,12 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
         $currentUserType = $authUser->userType;
         $manager = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cachemanager');
         $cache = $manager->getCache('acl');
-        $dbCache = $manager->getCache('db');
-        $acl = $cache->load('ACL_' . $currentUserType);
-
-        if ($acl === FALSE) {
+        
+        if (!($acl = $cache->load('ACL_' . $currentUserType))) {
             // role, resource , privilege
 
             if (!($accessPrivileges = $cache->load('access_privileges'))) {
                 $accessPrivileges = array('view' => array('index', 'get', 'view'), 'edit' => array('update', 'edit', 'submit'), 'delete' => array('delete'), 'import' => array('import', 'import-submit'), 'export' => array('export'));
-                
                 $cache->save($accessPrivileges, 'access_privileges');
             }
 
@@ -86,9 +83,9 @@ class Plugin_AuthenticityCheck extends Zend_Controller_Plugin_Abstract {
                 $this->_logHelper->direct('Acl.php :- allowed_access in ACL', $allowed_access, false);
             }
 
-            if (!($roles = $dbCache->load('roles'))) {
-                $roles = (new Application_Model_UserTypes())->fetchAssocUserTypes();
-                $dbCache->save($roles, 'roles');
+            if (!($roles = $cache->load('roles'))) {
+                $roles = (new Application_Model_UserTypes())->fetchAssocUserTypes('ut.status = 1');
+                $cache->save($roles, 'roles');
             }
 
             $resources = array_values(array_unique(array_column($allowed_access, 'controller')));
