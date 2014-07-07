@@ -39,12 +39,6 @@ class UserController extends Zend_Controller_Action {
         Zend_Layout::getMvcInstance()->setLayout('login');
 
         if ($this->_request->isPost()) {
-            if (empty($this->_params)) {
-                $this->_request->setPost(array('status' => 'error', 'msg' => 'No form submit data found'));
-                $this->_forward('register', 'user', null);
-                return;
-            }
-
             if (empty($this->_params['status'])) {
                 $objUser = new Application_Model_Users();
                 $metaData = $objUser->info()['metadata'];
