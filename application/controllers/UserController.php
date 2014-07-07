@@ -5,6 +5,11 @@ class UserController extends Zend_Controller_Action {
     public function init() {
         $request = $this->getRequest();
         $this->_params = $request->getParams();
+        $val = $this->_helper->constants('userDetails');
+        echo '<pre>';
+        print_r($val);
+        echo '</pre>';
+        exit;
     }
 
     public function indexAction() {
