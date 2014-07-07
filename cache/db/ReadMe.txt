@@ -1,1 +1,0 @@
-This Folder Path is specified In Application.Ini. Please refer that file

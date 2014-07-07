@@ -12,9 +12,10 @@ class Application_Model_UserTypes extends Zend_Db_Table {
         return $this->_db->fetchRow($sql);
     }
     
-    function fetchAssocUserTypes() {
+    function fetchAssocUserTypes($where) {
         $sql = $this->_db->select()
-                ->from(array('ut' => $this->_name), array('name as user_type', 'id as user_type_id'));
+                ->from(array('ut' => $this->_name), array('name as user_type', 'id as user_type_id'))
+                ->where($where);
         
         return $this->_db->fetchAssoc($sql);
     }

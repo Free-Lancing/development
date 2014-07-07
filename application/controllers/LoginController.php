@@ -47,7 +47,7 @@ class LoginController extends Zend_Controller_Action {
 
                 // Get Logged In Users User Type and Access
                 $userTypesObj = new Application_Model_UserTypes();
-                $acl = $userTypesObj->fetchUserTypes('u.id = ' . $identity->id);
+                $acl = $userTypesObj->fetchUserTypes('u.id = ' . $identity->id . ' AND u.status = 1 AND ut.status = 1');
                 $this->_helper->log('login/authenticate:- DB ACL For User ' . $identity->login, $acl, false);                
 
                 // Storing Zend Auth in session

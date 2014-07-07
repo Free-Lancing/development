@@ -2,15 +2,7 @@
 
 class Application_Model_Users extends Zend_Db_Table {
 
-    protected $_name = "Users";
-
-    public function insertUsers($data) {
-        return $this->_db->insert($data);
-    }
-
-    function updateUsers($data, $where) {
-        return $this->_db->update($data, $where);
-    }
+    protected $_name = "users";
 
     function fetchAssocUsers($fieldArr = array(), $where = '1') {
         try {
@@ -22,6 +14,6 @@ class Application_Model_Users extends Zend_Db_Table {
         } catch (Zend_Db_Statement_Exception $exc) {
             throw new Plugin_Exceptions_MySql('Sql Query :- ' . $sql . '<br /> Exception :- ' . $exc->getMessage());
         }
-        
     }
+
 }

@@ -9,7 +9,7 @@ class Application_Model_Acl extends Zend_Db_Table {
                     ->from(array('a' => $this->_name), array('controller', 'access'))
                     ->joinLeft(array('ut' => 'user_types'), 'a.user_type_id = ut.id', array('ut.name as user_type', 'ut.id as user_type_id'))
                     ->where($where)
-                    ->where('a.status = 0');
+                    ->where('a.status = 1');
             
             return $this->_db->fetchAll($sql);
             
