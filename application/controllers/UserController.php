@@ -4,12 +4,7 @@ class UserController extends Zend_Controller_Action {
 
     public function init() {
         $request = $this->getRequest();
-        $this->_params = $request->getParams();
-        $val = $this->_helper->constants('userDetails');
-        echo '<pre>';
-        print_r($val);
-        echo '</pre>';
-        exit;
+        $this->_params = $request->getParams();        
     }
 
     public function indexAction() {
@@ -48,13 +43,7 @@ class UserController extends Zend_Controller_Action {
                 $objUser = new Application_Model_Users();
                 $metaData = $objUser->info()['metadata'];
                 
-                $dataArray['first_name'] = $this->_params['fname'];
-                $dataArray['last_name'] = $this->_params['lname'];
-                $dataArray['email'] = $this->_params['email'];
-                $dataArray['login'] = $this->_params['uname'];
-                $dataArray['password'] = $this->_params['password'];
-                $dataArray['gender'] = $this->_params['gender'];
-
+                $dataArray = $this->_helper->constants('userDetails');
                 $error = $this->_helper->validate($metaData, $dataArray);
 
                 if (!empty($error)) {
